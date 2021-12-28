@@ -81,11 +81,6 @@ public class ChartController {
         var tasksScoresBoys = new int[tasksTitles.length][];
         var tasksScoresGirls = new int[tasksTitles.length][];
         var tasksScoresNone = new int[tasksTitles.length][];
-        for (var i = 0; i < tasksMaxScores.length; i++) {
-            for (var j = 0; j < tasksMaxScores[i].length; j++) {
-                tasksMaxScores[i][j] *= neededStudents.size();
-            }
-        }
         var boysCount = 0;
         var girlsCount = 0;
         var noneCount = 0;
