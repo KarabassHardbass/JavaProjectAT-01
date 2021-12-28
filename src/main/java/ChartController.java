@@ -78,31 +78,52 @@ public class ChartController {
         var neededStudents = manager.getStudents();
         var tasksTitles = manager.getCourse().getTasks();
         var tasksMaxScores = manager.getCourse().getTasksMaxScores();
-        var tasksScores = new int[tasksTitles.length][];
+        var tasksScoresBoys = new int[tasksTitles.length][];
+        var tasksScoresGirls = new int[tasksTitles.length][];
+        var tasksScoresNone = new int[tasksTitles.length][];
         for (var i = 0; i < tasksMaxScores.length; i++) {
             for (var j = 0; j < tasksMaxScores[i].length; j++) {
                 tasksMaxScores[i][j] *= neededStudents.size();
             }
         }
+        var boysCount = 0;
+        var girlsCount = 0;
+        var noneCount = 0;
+        var allCount = 0;
         for (var student : neededStudents) {
+            var currentSet = tasksScoresNone;
+            if (student.getVkInfo().getGender() == "мужской") {
+                boysCount++;
+                currentSet = tasksScoresBoys;
+            } else if (student.getVkInfo().getGender() == "женский") {
+                girlsCount++;
+                currentSet = tasksScoresGirls;
+            } else {
+                noneCount++;
+            }
             for (var i = 0; i < tasksMaxScores.length; i++) {
-                if (tasksScores[i] == null) {
-                    tasksScores[i] = new int[tasksMaxScores[i].length];
+                if (currentSet[i] == null) {
+                    currentSet[i] = new int[tasksMaxScores[i].length];
                 }
                 for (var j = 0; j < tasksMaxScores[i].length; j++) {
-                    tasksScores[i][j] = tasksScores[i][j] + student.getScoreByTaskIndex(0, i, j);
+                    currentSet[i][j] = currentSet[i][j] + student.getScoreByTaskIndex(0, i, j);
                 }
             }
         }
         var count = 0;
-        for (var i = 0; i < tasksScores.length; i++) {
-            for (var j = 0; j < tasksScores[i].length; j++) {
+        for (var i = 0; i < tasksMaxScores.length; i++) {
+            for (var j = 0; j < tasksMaxScores[i].length; j++) {
                 count++;
-                chartData.addValue((float)tasksScores[i][j] / tasksMaxScores[i][j] * 100, "Прогресс", count + tasksTitles[i][j]);
+                chartData.addValue((float)tasksScoresGirls[i][j] / tasksMaxScores[i][j]
+                        / girlsCount * 100, "Девочки", Integer.toString(count));
+                chartData.addValue((float)tasksScoresBoys[i][j] / tasksMaxScores[i][j]
+                        / boysCount * 100, "Мальчики", Integer.toString(count));
+                chartData.addValue((float)tasksScoresNone[i][j] / tasksMaxScores[i][j]
+                        / noneCount * 100, "Не указано", Integer.toString(count));
             }
         }
         var chart = ChartFactory.createBarChart("Статистика по баллам", "Задания", "Прогресс (в процентах)", chartData);
-        ChartUtils.saveChartAsPNG(new File("scores.png"), chart, 1024, 512);
+        ChartUtils.saveChartAsPNG(new File("scores.png"), chart, 4096, 512);
     }
 
     public ChartController(Manager manager) {
