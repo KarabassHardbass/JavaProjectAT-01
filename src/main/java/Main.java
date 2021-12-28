@@ -10,7 +10,7 @@ public class Main {
         Manager manager = new Manager();
         VkController controller = new VkController(
                 138281156,
-                "0c3eb5d3d6ac150d3f5b314cf4ac6aac80ba7d0aac99c5bd1abecff6ca465e327c460e33e543f1031b535",
+                "ТОКЕН Я НЕ ДАМ",
                 manager);
         controller.performCommands();
     }
