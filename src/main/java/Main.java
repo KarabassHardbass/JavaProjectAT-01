@@ -10,7 +10,7 @@ public class Main {
         Manager manager = new Manager();
         VkController controller = new VkController(
                 138281156,
-                "ТОКЕН Я НЕ ДАМ",
+                "ТОКЕН Я НЕ ДАМ.",
                 manager);
         controller.performCommands();
     }
